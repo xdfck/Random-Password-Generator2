@@ -70,4 +70,59 @@ def on_generate():
     use_letters = var_letters.get()
     use_special = var_special.get()
 
- 
+    password = generate_password(length, use_digits, use_letters, use_special)
+    if not password:
+        messagebox.showerror("Ошибка", "Выберите хотя бы один тип символов")
+        return
+
+    entry_password.delete(0, tk.END)
+    entry_password.insert(0, password)
+    
+    history.append(password)
+    save_history(history)
+    update_history_table()
+
+def update_history_table():
+    for i in tree.get_children():
+        tree.delete(i)
+    for p in history:
+        tree.insert("", tk.END, values=(p,))
+
+# --- Инициализация ---
+root = tk.Tk()
+root.title("Random Password Generator")
+root.geometry("500x400")
+root.grid_columnconfigure(1, weight=1)  # Для растягивания интерфейса
+
+# Загрузка истории при старте
+history = load_history()
+
+# --- Вкладка "Генерация" ---
+frame_gen = ttk.LabelFrame(root, text="Генерация пароля")
+frame_gen.pack(fill=tk.X, padx=10, pady=5)
+
+ttk.Label(frame_gen, text="Длина:").grid(row=0, column=0, padx=5, pady=5)
+scale_length = ttk.Scale(frame_gen, from_=MIN_LENGTH, to=MAX_LENGTH, orient=tk.HORIZONTAL)
+scale_length.set(12)
+scale_length.grid(row=0, column=1, sticky="ew", padx=5, pady=5)
+
+var_digits = tk.BooleanVar(value=True)
+ttk.Checkbutton(frame_gen, text="Цифры", variable=var_digits).grid(row=1, column=0, sticky="w", padx=10)
+var_letters = tk.BooleanVar(value=True)
+ttk.Checkbutton(frame_gen, text="Буквы", variable=var_letters).grid(row=1, column=1, sticky="w", padx=10)
+var_special = tk.BooleanVar(value=True)
+ttk.Checkbutton(frame_gen, text="Спецсимволы", variable=var_special).grid(row=1, column=2, sticky="w", padx=10)
+
+ttk.Button(frame_gen, text="Сгенерировать", command=on_generate).grid(row=2, column=0, columnspan=3, pady=15)
+
+ttk.Label(frame_gen, text="Результат:").grid(row=3, column=0, padx=10)
+entry_password = ttk.Entry(frame_gen)
+entry_password.grid(row=3, column=1, columnspan=2, sticky="ew", padx=10)
+
+# --- Таблица истории ---
+tree = ttk.Treeview(root, columns=("password",), show="headings")
+tree.heading("password", text="История паролей")
+tree.pack(fill="both", expand=True, padx=10, pady=10)
+
+update_history_table()
+root.mainloop()
