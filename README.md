@@ -31,3 +31,13 @@ GUI-приложение «Random Password Generator» с возможность
 - Tkinter — для интерфейса.
 - random — для генерации.
 - json — для хранения данных.
+
+## Зависимости
+
+*   **tkinter:** Входит в стандартную библиотеку Python на Windows и большинстве дистрибутивов Linux.
+*   **Для Linux (если нет по умолчанию):**
+    ```bash
+    sudo apt-get install python3-tk   # Debian/Ubuntu
+    sudo dnf install python3-tkinter # Fedora/RHEL-based
+    ```
+*   **Для macOS (рекомендуется):** Установите Python с официального сайта python.org или через Homebrew (`brew install python`), так как версия из коробки может не включать Tkinter.
